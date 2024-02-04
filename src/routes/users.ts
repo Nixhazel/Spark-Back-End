@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth';
-import { loginController, register } from '../controller/users';
+import { contactUsController, loginController, register } from '../controller/users';
 var router = express.Router();
 
 /* GET users listing. */
@@ -10,5 +10,6 @@ var router = express.Router();
 
 router.post("/signup", register);
 router.post("/login", loginController);
+router.post("/contactUs", contactUsController);
 
 export default router;
