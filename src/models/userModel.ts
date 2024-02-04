@@ -1,49 +1,53 @@
-// import mongoose from "mongoose";
+import mongoose, { Document, Schema, Model, Types } from "mongoose";
+import { UserInterface } from '../@types/models';
 
-// const userSchema = new mongoose.Schema(
-// 	{
-// 		fullName: {
-// 			type: String,
-// 			required: true
-// 		},
-// 		email: {
-// 			type: String,
-// 			required: true,
-// 			unique: true
-// 		},
-// 		password: {
-// 			type: String,
-// 			required: true
-// 		},
-// 		dateOfBirth: {
-// 			type: Date
-// 		},
-// 		phone: {
-// 			type: String,
-// 			required: true
-// 		},
-// 		gender: {
-// 			type: String,
-// 			required: true
-// 		},
-// 		walletBalance: {
-// 			type: Number,
-// 			default: 0
-// 		},
-// 		isVerified: {
-// 			type: Boolean,
-// 			required: true
-// 		},
-// 		isAdmin: {
-// 			type: Boolean,
-// 			required: true
-// 		}
-// 	},
-// 	{
-// 		timestamps: true
-// 	}
-// );
+interface UserDocument extends Document, Omit<UserInterface, "_id"> {
+	_id: Types.ObjectId;
+}
+// interface UserDocument extends UserInterface, Document {}
 
-// const userModel = mongoose.model("users", userSchema);
+interface UserModel extends Model<UserDocument> {}
 
-// export default userModel;
+const userSchema = new mongoose.Schema<UserDocument, UserModel>(
+	{
+		email: {
+			type: String,
+			required: true,
+			unique: true
+		},
+		password: {
+			type: String,
+			required: true
+		},
+		phone: {
+			type: String,
+			required: true
+		},
+		cart: [
+			{
+				name: {
+					type: String
+				},
+				price: {
+					type: Number
+				},
+				quantity: {
+					type: Number,
+					default: 1
+				}
+			}
+		],
+		isAdmin: {
+			type: Boolean,
+			default: false,
+			required: true
+		}
+	},
+	{
+		timestamps: true
+	}
+);
+
+const userModel = mongoose.model<UserDocument, UserModel>("User", userSchema);
+
+export default userModel;
