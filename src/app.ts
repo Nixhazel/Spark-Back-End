@@ -13,8 +13,7 @@ import { load } from "ts-dotenv";
 import mongoose from "mongoose";
 mongoose.set("strictQuery", true);
 
-
-import indexRouter from "./routes/index";
+import adminRouter from "./routes/admin";
 import usersRouter from "./routes/users";
 
 const app = express();
@@ -24,17 +23,17 @@ const env = load({
 	MONGO_URL: String,
 	JWT_SECRET: String,
 	SALT_ROUNDS: Number,
-  OTP_LENGTH: Number,
-  USEREMAIL: String,
-  PASS: String,
-  SERVICE: String
+	OTP_LENGTH: Number,
+	USEREMAIL: String,
+	PASS: String,
+	SERVICE: String
 	// CLOUDINARY_API_KEY: String,
 	// CLOUDINARY_API_SECRET: String
 });
 
 const url = process.env.MONGO_URL as string;
 
-console.log('mongo string', url)
+console.log("mongo string", url);
 
 assert.ok(env.MONGO_URL === process.env.MONGO_URL);
 assert.ok(env.JWT_SECRET === process.env.JWT_SECRET);
@@ -44,7 +43,7 @@ assert.ok(env.JWT_SECRET === process.env.JWT_SECRET);
 // Mongodb Connection
 (async () => {
 	await mongoose.connect(url);
-	console.log('MongoDB is connected');
+	console.log("MongoDB is connected");
 })();
 
 // view engine setup
@@ -58,7 +57,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/v1", indexRouter);
+app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/users", usersRouter);
 
 // catch 404 and forward to error handler
