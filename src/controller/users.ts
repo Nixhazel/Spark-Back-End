@@ -54,7 +54,7 @@ export const register = async (req: Request, res: Response) => {
 			success: true,
 			path: req.url,
 			message: `New user created successfully`,
-			data: newuser,
+			user: newuser,
 			token
 		});
 	} catch (error) {
@@ -85,7 +85,7 @@ export const loginController = async (req: Request, res: Response) => {
 			return res.status(401).send({
 				success: false,
 				path: req.url,
-				message: "User dose not exist"
+				message: "This User dose not exist"
 			});
 		}
 		const isMatch = await bcrypt.compareSync(password, user.password);
