@@ -82,7 +82,7 @@ export const editproducts = async (req: Request, res: Response) => {
 		}
 
 		const product = await Products.findOne({
-			_id: req.params.productId
+			_id: req.params.prodId
 		}).exec();
 		if (!product) {
 			return res.status(401).send({
@@ -112,7 +112,7 @@ export const editproducts = async (req: Request, res: Response) => {
 			images: { image1, image2, image3 }
 		};
 		const updateProducts = await Products.findOneAndUpdate(
-			{ _id: req.params.driverId },
+			{ _id: req.params.prodId },
 			newProductsData,
 			{ new: true }
 		);
@@ -128,6 +128,45 @@ export const editproducts = async (req: Request, res: Response) => {
 			error: error,
 			path: req.url,
 			message: "Error Updating Product",
+			success: false
+		});
+	}
+};
+
+export const getOneProduct = async (req: Request, res: Response) => {
+	try {
+		const userId = req.user;
+
+		const adminUser = await User.findOne({ _id: userId }).exec();
+		if (!adminUser?.isAdmin) {
+			return res.status(401).send({
+				message: "User is not an Admin",
+				success: false,
+				path: req.url
+			});
+		}
+		const product = await Products.findOne({
+			_id: req.params.prodId
+		}).exec();
+		if (!product) {
+			return res.status(401).send({
+				message: "Product dose not exist",
+				success: false,
+				path: req.url
+			});
+		}
+
+		return res.status(201).send({
+			status: "success",
+			path: req.url,
+			message: `Product Details`,
+			data: product
+		});
+	} catch (error) {
+		res.status(500).send({
+			status: "error",
+			path: req.url,
+			message: "Error Getting Product",
 			success: false
 		});
 	}
